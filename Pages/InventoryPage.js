@@ -99,8 +99,11 @@ export default class InventoryPage{
     async getCartCount(){
         const cartCounterSelector = 'span.shopping_cart_badge';
 
+        // Use a custom timeout to avoid excessive wait times when counter is not expected
+        const timeout = 500;
+
         // If the cart is empty the counter wont be present so if it is not visible return 0
-        const counterVisible = await this.actions.isVisible(cartCounterSelector);
+        const counterVisible = await this.actions.isVisible(cartCounterSelector, timeout);
         if(!counterVisible) return 0;
 
         // Get the text, convert it to an int, and return it
