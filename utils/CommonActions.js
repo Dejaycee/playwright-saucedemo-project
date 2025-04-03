@@ -13,8 +13,8 @@ export default class CommonActions{
     /**
      * Navigates to the specified URL
      * 
-     * @param {string} url - The URL to navigate to
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @param {string} url The URL to navigate to
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async navigate(url){
         await this.page.goto(url);
@@ -36,7 +36,7 @@ export default class CommonActions{
      * Clicks the given element
      * 
      * @param {string} selector The selector of the web element to be clicked
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async click(selector){
         await this.page.click(selector);
@@ -46,7 +46,7 @@ export default class CommonActions{
      * Clicks every instance of the given element
      * 
      * @param {string} selector The selector of the web elements to be clicked
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async clickAll(selector){
         // Get the buttons and their count ()
@@ -87,6 +87,16 @@ export default class CommonActions{
      */
     async getText(selector){
         return await this.page.textContent(selector);
+    }
+
+    /**
+     * Get the text of every element matching selector
+     * 
+     * @param {string} selector The selector of the web elements to get text from
+     * @returns {Promise<string[]>} The elements' text
+     */
+    async getTextFromAll(selector){
+        return await this.page.locator(selector).allTextContents();
     }
 
     /**
@@ -139,5 +149,60 @@ export default class CommonActions{
 
         // Return true if all images successfully loaded
         return true;
+    }
+
+    /**
+     * Confirms given elements are in alphabetical order (based on their text)
+     * 
+     * @param {string} selector The selector of the elements
+     * @param {bool} ascending Whether to assert ascending order. Defaults to true
+     * @returns {Promise<bool>} Whether order is alphabetical
+     */
+    async checkAlphabeticalOrder(selector, ascending = true){
+        // Gets the text from every element
+        const text = await this.getTextFromAll(selector);
+
+        // Use unicode values to check if order is alphabetical then return
+        if (ascending) {
+            // Compare every text after the first to that before it in the array
+            return text.every((comparing, i, array) => i === 0 || comparing >= array[i -1]);
+        } else {
+            // If expecting Z to A order reverse the above check
+            return text.every((comparing, i, array) => i === 0 || comparing <= array[i -1]);
+        }
+    }
+
+    /**
+     * Confirms given elements are in numerical order (based on their text)
+     * 
+     * @param {string} selector The selector of the elements
+     * @param {bool} ascending Whether to assert ascending order. Defaults to true
+     * @returns {Promise<bool>} Whether elements are in numerical order
+     */
+    async checkNumericalOrder(selector, ascending = true){
+        // Gets the text from every element
+        const text = await this.getTextFromAll(selector);
+
+        // Converts the text to a float, removing any '$' and spaces that may be present
+        const numericValues = text.map(number => parseFloat(number.replace('$', '').trim()))
+
+        // Use value to check if in numerical order, then return
+        if (ascending) {
+            // Compare every value after the first to that before it in the array
+            return numericValues.every((comparing, i, array) => i === 0 || comparing >= array[i -1]);
+        } else {
+            // If expecting high to low order reverse the above check
+            return numericValues.every((comparing, i, array) => i === 0 || comparing <= array[i -1]);
+        }
+    }
+
+    /**
+     * Change the value of the given dropdown
+     * 
+     * @param {*} selector The selector of the dropdown
+     * @param {string} value The new value
+     */
+    async dropdownSelectByValue (selector, value) {
+        await this.page.locator(selector).selectOption({value: value});
     }
 }

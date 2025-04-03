@@ -14,7 +14,7 @@ export default class LoginPage{
 
     /**
      * Navigates to the URL of the login page using the URL defined in this class
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async navigate(){
         await this.actions.navigate(this.url);
@@ -25,7 +25,7 @@ export default class LoginPage{
      * 
      * @param {string} username The username to attempt
      * @param {string} password The password to attempt
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async login(username, password){
         // Set the username, password, and login element ids
@@ -52,7 +52,7 @@ export default class LoginPage{
     /**
      * Assert a login error has occured regardless of type
      * 
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async assertError(){
         // Check if error message contains the universal error text
@@ -64,7 +64,7 @@ export default class LoginPage{
      * Assert a specific error message was given
      * 
      * @param {string} expectedMessage The error message we expect to get
-     * @returns {Promise<void>} - The promise that is returned upon completion
+     * @returns {Promise<void>} The promise that is returned upon completion
      */
     async assertErrorMessage(expectedMessage){
         const actualMessage = await this.getErrorMessage();
