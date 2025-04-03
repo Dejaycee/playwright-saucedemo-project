@@ -11,6 +11,7 @@ export default class InventoryPage{
         this.actions = new CommonActions(page);
         this.addButtonSelector = 'button.btn_primary.btn_inventory';
         this.removeButtonSelector = 'button.btn_secondary.btn_inventory';
+        this.cartCounterSelector = 'span.shopping_cart_badge';
     }
 
     /**
@@ -92,22 +93,31 @@ export default class InventoryPage{
     }
 
     /**
+     * Gets the number of cart counters (the count but the counter elements) primarily
+     * intended for checking if no counters are present (i.e. the cart is empty)
+     * 
+     * @returns {Promise<int>} The number of cart counters
+     */
+    async getCartCounterCount(){
+        return await this.getElementCount(this.cartCounterSelector);
+    }
+
+    /**
      * Gets the number of items in the cart
      * 
      * @returns {Promise<int>} The item count
      */
     async getCartCount(){
-        const cartCounterSelector = 'span.shopping_cart_badge';
 
         // Use a custom timeout to avoid excessive wait times when counter is not expected
         const timeout = 500;
 
         // If the cart is empty the counter wont be present so if it is not visible return 0
-        const counterVisible = await this.actions.isVisible(cartCounterSelector, timeout);
+        const counterVisible = await this.actions.isVisible(this.cartCounterSelector, timeout);
         if(!counterVisible) return 0;
 
         // Get the text, convert it to an int, and return it
-        const cartCountText = await this.actions.getText(cartCounterSelector);
+        const cartCountText = await this.actions.getText(this.cartCounterSelector);
         const count = parseInt(cartCountText, 10);
         return count;
     }

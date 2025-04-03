@@ -65,12 +65,10 @@ export default class CommonActions{
      * Get whether a given element is visible
      * 
      * @param {string} selector The selector of the web element expected to be visible
-     * @param {int} customTimeout MS before timeout
+     * @param {int} timeout MS before timeout. Defaults to timeout in playwright config
      * @returns {Promise<bool>} Whether the element is visible
      */
-    async isVisible(selector, customTimeout){
-        // Gets the timeout set in the playwright config
-        const timeout = customTimeout ?? playwrightConfig.timeout;
+    async isVisible(selector, timeout = playwrightConfig.timeout){
         try{
             // Trys to find the selector within the given timeframe
             await this.page.waitForSelector(selector, { state: 'visible', timeout: timeout});
@@ -105,13 +103,12 @@ export default class CommonActions{
      * Checks if images matching a given selector have loaded
      * 
      * @param {string} selector The selector of the images
+     * @param {int} timeout MS before timeout. Defaults to 500ms
      * @returns {Promise<bool>} Whether all images were loaded
      */
-    async checkImageLoaded(selector){
+    async checkImageLoaded(selector, timeout = 500){
         const image = await this.page.locator(selector);
         const count = await image.count();
-        // How long to wait for an image to load before timing out
-        const msToWait = 500;
 
         // Check every image
         for (let i = 0; i < count; i++) {
@@ -134,7 +131,7 @@ export default class CommonActions{
                 // If the image has a height or width greater than 0 it
                 // should have loaded so return this
                 return img.naturalHeight + img.naturalWidth > 0;
-            }, msToWait)
+            }, timeout)
 
             // If any image fails to load return false
             if (!isLoaded) return false;

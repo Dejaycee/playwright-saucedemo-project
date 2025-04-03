@@ -30,7 +30,7 @@ test.describe('Inventory tests', () => {
 
         // Check that no buttons are pressed and the cart is empty
         await expect(await pm.InventoryPage.getRemoveButtonCount()).toBe(0);
-        await expect(await pm.InventoryPage.getCartCount()).toBe(0);
+        await expect(await pm.InventoryPage.getCartCounterCount()).toBe(0);
 
         // Click every button, confirm this, and make sure the cart is full
         await pm.InventoryPage.addAllItems();
@@ -42,7 +42,7 @@ test.describe('Inventory tests', () => {
         await pm.InventoryPage.removeAllItems();
         await expect(await pm.InventoryPage.getAddButtonCount()).toBe(count);
         await expect(await pm.InventoryPage.getRemoveButtonCount()).toBe(0);
-        await expect(await pm.InventoryPage.getCartCount()).toBe(0);
+        await expect(await pm.InventoryPage.getCartCounterCount()).toBe(0);
       })
 
       // Check all inventory images loaded
