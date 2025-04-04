@@ -9,7 +9,7 @@ const username = 'standard_user'; // Change this to problem_user to cause tests 
 const password = 'secret_sauce';
 
 // Inventory tests
-test.describe.only('Inventory tests', () => {
+test.describe('Inventory tests', () => {
 
       // Set the POM Manager before each test
       test.beforeEach(async ({page}) => {
